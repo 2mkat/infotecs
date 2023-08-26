@@ -31,7 +31,7 @@ public:
     std::queue<char> strToKb(std::string &str) {
         std::queue<char> kbStr;
         for (auto sym: str) {
-            if (int(sym) - 48 % 2 == 0) {
+            if ((int(sym) - 48) % 2 == 0) {
                 kbStr.push('K');
                 kbStr.push('B');
             } else {
