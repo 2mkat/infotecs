@@ -1,3 +1,8 @@
+#ifndef CLIENT_H
+#define CLIENT_H
+
+#pragma once
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -16,3 +21,5 @@ public:
 
     // }
 };
+
+#endif
