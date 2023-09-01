@@ -11,7 +11,7 @@ bool DataParser::validStr(std::string &str) {
 //            return false;
 //        }
     for (char symb: str) {
-        if (symb > '9') {
+        if (symb > '9' || symb < '0') {
             return false;
         }
     }
