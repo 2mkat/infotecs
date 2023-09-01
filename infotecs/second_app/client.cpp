@@ -32,8 +32,3 @@ void Server::RunReviewer() {
         std::cout << "Error with data receiving" << '\n';
     }
 }
-
-// ~Server() {
-
-// }
-
