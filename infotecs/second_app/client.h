@@ -16,10 +16,6 @@ class Server {
 public:
     void launchSocket();
     void RunReviewer();
-
-    // ~Server() {
-
-    // }
 };
 
 #endif
