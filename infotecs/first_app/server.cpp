@@ -7,14 +7,15 @@ bool DataParser::validStr(std::string &str) {
     if (str.size() >= 64) {
         return false;
     }
-    //        if (std::all_of(str.begin(), str.end(), [](char i) { return std::isdigit(i); })) {
-//            return false;
-//        }
-    for (char symb: str) {
-        if (symb > '9' || symb < '0') {
-            return false;
-        }
+    auto isDigit = [](const auto& i) {return std::isdigit(i); };
+    if (!std::all_of(str.begin(), str.end(), isDigit)) {
+        return false;
     }
+    // for (char symb: str) {
+    //     if (symb > '9' || symb < '0') {
+    //         return false;
+    //     }
+    // }
     return true;
 }
 
