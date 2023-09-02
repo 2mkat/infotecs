@@ -11,26 +11,17 @@ bool DataParser::validStr(std::string &str) {
     if (!std::all_of(str.begin(), str.end(), isDigit)) {
         return false;
     }
-
-    //for (char symb: str) {
-    //    if (!std::isdigit(symb)) {
-    //        return false;
-    //    }
-    //}
+    
     return true;
 }
 
-std::queue<char> DataParser::strToKb(std::string &str) {
-    std::queue<char> kbStr;
-    for (auto sym: str) {
-        if (int(sym) % 2 == 0) {
-            kbStr.push('K');
-            kbStr.push('B');
-        } else {
-            kbStr.push(sym);
+void DataParser::strToKb(std::string &str) {
+    for (size_t i{0}; i < str.size(); ++i) {
+        if (std::isdigit(str.at(i)) && !(str.at(i) % 2)) {
+            str.erase(i, 1);
+            str.insert(i, "KB");
         }
     }
-    return kbStr;
 }
 
 void DataSender::launchSocket() {
@@ -56,9 +47,9 @@ void DataSender::runTask() {
         std::getline(std::cin, str);
     } 
     std::sort(str.begin(), str.end(), std::greater<char>());
-    std::queue<char> kbStr = strToKb(str);
+    strToKb(str);
     std::unique_lock<std::mutex> ul(mu_);
-    buffer_ = std::move(kbStr);
+    buffer_ = str;
     isReady_ = true;
     cond_.notify_one();
 }
@@ -66,21 +57,16 @@ void DataSender::runTask() {
 void DataSender::runSender() {
     std::unique_lock<std::mutex> ul(mu_);
     cond_.wait(ul, [&]() { return isReady_; });
-    std::queue<char> buffer = std::move(buffer_);
     isReady_ = false;
     unsigned sum = 0;
-    char symb;
-    while (!buffer.empty()) {
-        symb = buffer.front();
-        std::cout << symb;
-        int num = int(symb) - 48;
-        if (num <= 9) {
-            sum += num;
+    std::cout << buffer_ << '\n';
+    for (auto const &i : buffer_) {
+        if (std::isdigit(i)) {
+            sum += i - '0';
         }
-        buffer.pop();
     }
-
-    std::cout << '\n' << "Sum: " << sum << '\n';
+    buffer_ = "";
+    std::cout << "Sum: " << sum << '\n';
     ul.unlock();
     launchSocket();
     sendto(sockfd, &sum, sizeof(int),

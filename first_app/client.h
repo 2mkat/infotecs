@@ -4,7 +4,6 @@
 #pragma once
 
 #include <string>
-#include <queue>
 #include <mutex>
 #include <condition_variable>
 
@@ -16,12 +15,12 @@
 class DataParser {
 public:
     bool validStr(std::string &str);
-    std::queue<char> strToKb(std::string &str);
+    void strToKb(std::string &str);
 };
 
 class DataSender : public DataParser {
 private:
-    std::queue<char> buffer_;
+    std::string buffer_;
     std::mutex mu_;
     std::condition_variable cond_;
     bool isReady_ = false;
